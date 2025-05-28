@@ -12,10 +12,14 @@ app.use(express.json());
 
 // Ruta de prueba
 app.get('/', (req, res) => {
-  res.send('Hola, tu backend está funcionando 🚀');
+  res.send('Bbackend funcionando 🚀');
 });
 
-// Conectar a MongoDB
+// Importar rutas
+const taskRoutes = require('./routes/tasks');
+app.use('/tasks', taskRoutes);
+
+// Conectar a MongoDB y arrancar servidor
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
