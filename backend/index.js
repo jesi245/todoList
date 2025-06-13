@@ -12,22 +12,26 @@ app.use(express.json());
 
 // Ruta de prueba
 app.get('/', (req, res) => {
-  res.send('Bbackend funcionando 🚀');
+  res.send('Backend funcionando 🚀');
 });
 
 // Importar rutas
 const taskRoutes = require('./routes/tasks');
 app.use('/tasks', taskRoutes);
 
-// Conectar a MongoDB y arrancar servidor
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('🟢 Conectado a MongoDB');
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
+// Solo conectar si no está corriendo en test
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(() => {
+    console.log('🟢 Conectado a MongoDB');
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
+    });
+  }).catch((error) => {
+    console.error('🔴 Error al conectar a MongoDB:', error.message);
   });
-}).catch((error) => {
-  console.error('🔴 Error al conectar a MongoDB:', error.message);
-});
+}
+
+module.exports = app;
