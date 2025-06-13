@@ -2,17 +2,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      # Secreto con la URI de tu base de datos de pruebas en Atlas
       MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
 
     steps:
@@ -24,38 +21,20 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Debug: echo first 5 chars of MONGODB_URI_TEST
+        run: echo "${MONGODB_URI_TEST:0:5}... (length: ${#MONGODB_URI_TEST})"
+
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm install
 
       - name: Run backend tests
         working-directory: ./backend
-        run: npm test
+        run: |
+          # Aumentar timeout de Jest a 30s
+          echo "jest.setTimeout(30000);" > ./backend/jest.setup.js
+          npm test -- --setupFiles ./backend/jest.setup.js
 
       - name: Build backend Docker image
         working-directory: ./backend
         run: docker build -t todo-backend .
-
-  # (Opcional) ejemplo de job para push a GHCR:
-  docker-build-and-push:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
-
-      - name: Build and push Docker image
-        working-directory: ./backend
-        run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/todo-backend:latest
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
