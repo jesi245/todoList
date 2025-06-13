@@ -22,14 +22,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
+
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm install
 
       - name: Run backend tests
         working-directory: ./backend
-        run: npm test -- --testTimeout=60000
+        env:
+          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
+          NODE_ENV: test
+        run: |
+          echo "MONGODB_URI_TEST=${MONGODB_URI_TEST}" > .env.test
+          npm test -- --testTimeout=60000
+
 
       - name: Build backend Docker image
         working-directory: ./backend
