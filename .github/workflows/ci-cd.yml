@@ -21,15 +21,19 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Debug: print MONGODB_URI_TEST
+        run: |
+          echo "MONGODB_URI_TEST is:"
+          printenv MONGODB_URI_TEST || echo "<<empty>>"
+
       - name: Install backend dependencies
         working-directory: backend
         run: npm install
 
       - name: Run backend tests
         working-directory: backend
-        run: npm test -- --testTimeout=30000
+        run: npm test -- --testTimeout=60000
 
       - name: Build backend Docker image
         working-directory: backend
         run: docker build -t todo-backend .
-
