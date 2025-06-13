@@ -22,7 +22,8 @@ jobs:
           node-version: '18'
 
       - name: Debug: echo first 5 chars of MONGODB_URI_TEST
-        run: echo "${MONGODB_URI_TEST:0:5}... (length: ${#MONGODB_URI_TEST})"
+        run: |
+          echo "${MONGODB_URI_TEST:0:5}... (length: ${#MONGODB_URI_TEST})"
 
       - name: Install backend dependencies
         working-directory: ./backend
@@ -32,8 +33,8 @@ jobs:
         working-directory: ./backend
         run: |
           # Aumentar timeout de Jest a 30s
-          echo "jest.setTimeout(30000);" > ./backend/jest.setup.js
-          npm test -- --setupFiles ./backend/jest.setup.js
+          echo "jest.setTimeout(30000);" > jest.setup.js
+          npm test -- --setupFiles jest.setup.js
 
       - name: Build backend Docker image
         working-directory: ./backend
