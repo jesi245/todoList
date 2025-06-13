@@ -2,9 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build-and-test:
@@ -20,20 +22,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Debug: print MONGODB_URI_TEST
-        run: |
-          echo "MONGODB_URI_TEST is:"
-          printenv MONGODB_URI_TEST || echo "<<empty>>"
-
+          
       - name: Install backend dependencies
-        working-directory: backend
+        working-directory: ./backend
         run: npm install
 
       - name: Run backend tests
-        working-directory: backend
+        working-directory: ./backend
         run: npm test -- --testTimeout=60000
 
       - name: Build backend Docker image
-        working-directory: backend
+        working-directory: ./backend
         run: docker build -t todo-backend .
