@@ -27,10 +27,9 @@ jobs:
 
       - name: Run backend tests
         working-directory: backend
-        run: |
-          echo "jest.setTimeout(30000);" > jest.setup.js
-          npm test -- --setupFiles jest.setup.js
+        run: npm test -- --testTimeout=30000
 
       - name: Build backend Docker image
         working-directory: backend
         run: docker build -t todo-backend .
+
