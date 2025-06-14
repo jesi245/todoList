@@ -8,6 +8,7 @@ services:
     environment:
       - PORT=3000
       - MONGODB_URI=${MONGODB_URI}
+      - NODE_ENV=production
 
     restart: unless-stopped
 

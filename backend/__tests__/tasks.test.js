@@ -1,3 +1,6 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.test') });
+
 const request = require('supertest');
 const app = require('../index');
 const mongoose = require('mongoose');
@@ -5,7 +8,7 @@ const Task = require('../models/Task');
 
 describe('API /tasks', () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env.MONGODB_URI_TEST, {
+    await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
