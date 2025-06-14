@@ -14,36 +14,36 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     steps:
-      - name: 🔄 Clonar repositorio
+      - name: Clonar repositorio
         uses: actions/checkout@v3
 
-      - name: 🔧 Configurar Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: 📦 Instalar dependencias backend
+      - name: Instalar dependencias backend
         working-directory: ./backend
         run: npm install
 
-      - name: 🧪 Ejecutar tests
+      - name: Ejecutar tests
         working-directory: ./backend
         env:
           NODE_ENV: test
           MONGODB_URI: ${{ secrets.MONGODB_URI_TEST }}
         run: npm test -- --testTimeout=60000
 
-      - name: 🐳 Login a Docker Hub
+      - name: Login a Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: 🏗️ Build de imagen Docker
+      - name: Build de imagen Docker
         working-directory: ./backend
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-backend .
 
-      - name: 📤 Push de imagen a Docker Hub
+      - name: Push de imagen a Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/todo-backend
 
-      - name: 🚀 Desplegar en Render
+      - name: Desplegar en Render
         run: curl -X GET "https://api.render.com/deploy/srv-d16fapp5pdvs73f8ihb0?key=x7GqkIBUKvU"
 
 
