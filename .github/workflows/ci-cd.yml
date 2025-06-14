@@ -31,6 +31,7 @@ jobs:
         run: |
           echo "MONGODB_URI=${{ secrets.MONGODB_URI_TEST }}" > .env.test
           echo "PORT=3001" >> .env.test
+          cat .env.test
           npm test -- --testTimeout=60000
 
       - name: 🐳 Login a Docker Hub
