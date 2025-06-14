@@ -1,0 +1,34 @@
+- name: Configurar servidor y desplegar app TodoList
+  hosts: webserver
+  become: yes
+
+  tasks:
+    - name: Actualizar repos
+      apt:
+        update_cache: yes
+
+    - name: Instalar Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Instalar Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+
+    - name: Instalar Git
+      apt:
+        name: git
+        state: present
+
+    - name: Clonar repositorio de la app
+      git:
+        repo: https://github.com/jesi245/todoList.git
+        dest: /opt/todolist
+        force: yes
+
+    - name: Levantar contenedores con Docker Compose
+      command: docker-compose up -d
+      args:
+        chdir: /opt/todolist
