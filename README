@@ -1,0 +1,81 @@
+# TodoList
+
+## 1. Descripción del proyecto
+Para este trabajo decidimos hacer una aplicación muy simple, ya que el foco principal estuvo en realizar las buenas prácticas de DevOps más que en la complejidad de la aplicación en sí.
+
+La aplicación se llama TodoList y es una lista de tareas. Está desarrollada con Node.js y Express en el backend, mientras que el frontend utiliza HTML, CSS y JavaScript. La base de datos es una instancia de MongoDB Atlas.
+
+![Vista de la app de lista de tareas](https://i.ibb.co/gbrR7RfH/Captura-de-pantalla-2025-06-14-042443.png)
+
+
+Al abrir la aplicación, se puede visualizar la lista de tareas previamente cargadas. Se pueden realizar las siguientes acciones:
+- Agregar una tarea nueva.
+- Eliminar una tarea existente.
+- Editar el texto de una tarea.
+- Marcar una tarea como realizada.
+
+Todas estas modificaciones quedan almacenadas en la base de datos para que, al volver a abrir la aplicación, la lista se mantenga actualizada.
+
+## 2. Instrucciones para correr el proyecto localmente con Docker
+Requisitos previos: tener instalado Docker y Docker Compose en la máquina.
+
+Pasos para ejecutar la aplicación
+a- Clonar el repositorio: utilizar los siguiente comandos en la terminal
+git clone https://github.com/jesi245/todoList.git
+cd todoList
+
+En este repositorio ya se incluyen los archivos .env y .env.test con las variables de entorno necesarias para conectarse a la base de datos MongoDB Atlas.
+IMPORTANTE: Esta práctica de subir los archivos .env se realizo solo a los fines de este trabajo y para facilitar la evaluación del proyecto. En un entorno real, no se deben subir al github estos archivos porque contienen informacion muy importante del proyecto y no debe quedar expuesta por eso para evitar que se suba deben incluirse en el archivo . gitignore. 
+
+b- Construir y levantar los contenedores usando Docker Compose: usar este comando
+
+docker-compose up --build
+
+c- Abrir el navegador y acceder a la interfaz de la aplicación en: 
+http://localhost:8080
+
+d- Para detener los contenedores y limpiar el entorno, usareste comando:
+docker-compose down
+
+Detalles técnicos:
+- El backend corre en Node.js y Express, expuesto en el puerto 3000 dentro del contenedor.
+
+- El frontend es servido con Nginx, expuesto en el puerto 8080 de la máquina local.
+
+- La conexión a la base de datos MongoDB Atlas está configurada en las variables de entorno del archivo .env.
+
+## 3. Diagrama del Pipeline DevOps
+
+Cada vez que se realiza un push a la rama main, el pipeline se activa y ejecuta los siguientes pasos secuenciales:
+- Clonar repositorio: Se descarga el código fuente del repositorio para trabajar con la versión más reciente.
+- Configurar Node.js: Se prepara el entorno con la versión necesaria de Node.js para la aplicación.
+- Instalar dependencias backend: Se instalan las librerías y dependencias necesarias para el backend.
+- Ejecutar tests: Se corren los tests automatizados para validar que la aplicación funciona correctamente.
+- Login a Docker Hub: Se autentica en Docker Hub para poder subir la imagen creada.
+- Build de imagen Docker: Se construye la imagen Docker de la aplicación backend.
+- Push de imagen a Docker Hub: Se sube la imagen creada al repositorio remoto en Docker Hub.
+- Despliegue en Render: Se lanza automáticamente el despliegue de la aplicación en el entorno de prueba usando Render.
+
+Este proceso asegura que cada cambio en el código sea validado, empaquetado y desplegado de forma automática, garantizando calidad y rapidez en la entrega.
+
+#### Enlace del diagrama: https://lucid.app/lucidchart/358b8a76-b3d0-470f-9bbe-c09cc3dfbd51/edit?viewport_loc=105%2C-10%2C2729%2C1275%2C0_0&invitationId=inv_9c2bfa31-0844-4ced-9d3c-f5d9ed3e849f
+
+## 4. Conclusiones y roles del equipo
+Durante el desarrollo de este trabajo práctico decidimos enfocarnos en aplicar correctamente los conceptos y herramientas de DevOps, más que en la complejidad funcional de la aplicación. Fue una decisión intencional, ya que para ambas integrantes del equipo estos eran conocimientos nuevos y ponerlos en práctica fue un trabajo complicado en varias ocasiones.
+
+A lo largo del proceso logramos:
+- Crear una pipeline funcional de CI/CD con GitHub Actions.
+- Automatizar el build, test y despliegue de la aplicación en Render.
+- Aprender a trabajar con contenedores usando Docker y docker-compose.
+- Documentar y preparar el proyecto para que pueda ser ejecutado localmente por otras personas con un solo comando.
+
+Este trabajo nos permitió comprender en profundidad cómo se integran las distintas herramientas de un entorno DevOps y como sirven para optimizar el flujo de desarrollo.
+
+En cuanto al trabajo en equipo, este trabajo fue realizado en conjunto por Jesica Toloza y Carla Garicoch. Desde el comienzo nos organizamos de forma colaborativa, dividiendo tareas:
+- Jesica desarrolló el backend y configuró Docker, CI/CD y el despliegue.
+- Karla se encargó del frontend, la integración y el testing.
+
+Cada una trabajó inicialmente en su rama (backend y frontend), y luego unificamos en una rama intermedia (develop) antes de hacer el merge final a main.
+
+El trabajo fue colaborativo. Si bien teníamos horarios diferentes, nos mantuvimos en constante comunicación. Cuando una encontraba un problema, se lo compartía a la otra para que pudiera continuar o revisar.
+Esto nos permitió no solo dividir tareas, sino también aprender mutuamente de los errores y soluciones de la otra persona.
