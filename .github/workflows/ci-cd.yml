@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -30,15 +28,13 @@ jobs:
 
       - name: 🧪 Ejecutar tests
         working-directory: ./backend
-        env:
-          NODE_ENV: test
-          MONGODB_URI: ${{ secrets.MONGODB_URI_TEST }}
         run: |
-          echo "MONGODB_URI=${MONGODB_URI}" > .env.test
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI_TEST }}" > .env.test
+          echo "PORT=3001" >> .env.test
           npm test -- --testTimeout=60000
 
       - name: 🐳 Login a Docker Hub
-        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: 🏗️ Build de imagen Docker
         working-directory: ./backend
@@ -49,5 +45,6 @@ jobs:
 
       - name: 🚀 Desplegar en Render
         run: curl -X GET "https://api.render.com/deploy/srv-d16fapp5pdvs73f8ihb0?key=x7GqkIBUKvU"
+
 
 
