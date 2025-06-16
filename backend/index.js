@@ -28,7 +28,6 @@ app.use('/tasks', taskRoutes);
 
 // Solo conectar si no está corriendo en test
 if (process.env.NODE_ENV !== 'test') {
-  // Conexión a MongoDB sin opciones deprecated
   mongoose
     .connect(process.env.MONGODB_URI)
     .then(() => {

@@ -27,14 +27,14 @@ cd todoList
 En este repositorio ya se incluyen los archivos .env y .env.test con las variables de entorno necesarias para conectarse a la base de datos MongoDB Atlas.
 IMPORTANTE: Esta práctica de subir los archivos .env se realizo solo a los fines de este trabajo y para facilitar la evaluación del proyecto. En un entorno real, no se deben subir al github estos archivos porque contienen informacion muy importante del proyecto y no debe quedar expuesta por eso para evitar que se suba deben incluirse en el archivo . gitignore. 
 
-b- Construir y levantar los contenedores usando Docker Compose: usar este comando
+b- Construir y levantar los contenedores usando Docker Compose: 
 
-docker-compose up --build
+usar este comando: docker-compose up --build
 
 c- Abrir el navegador y acceder a la interfaz de la aplicación en: 
 http://localhost:8080
 
-d- Para detener los contenedores y limpiar el entorno, usareste comando:
+d- Para detener los contenedores y limpiar el entorno, usar este comando:
 docker-compose down
 
 Detalles técnicos:
@@ -56,7 +56,7 @@ Cada vez que se realiza un push a la rama main, el pipeline se activa y ejecuta 
 - Push de imagen a Docker Hub: Se sube la imagen creada al repositorio remoto en Docker Hub.
 - Despliegue en Render: Se lanza automáticamente el despliegue de la aplicación en el entorno de prueba usando Render.
 
-Este proceso asegura que cada cambio en el código sea validado, empaquetado y desplegado de forma automática, garantizando calidad y rapidez en la entrega.
+Este proceso asegura que cada cambio en el código sea validado, empaquetado y desplegado de forma automática, garantizando rapidez en la entrega.
 
 #### Enlace del diagrama: https://lucid.app/lucidchart/358b8a76-b3d0-470f-9bbe-c09cc3dfbd51/edit?viewport_loc=105%2C-10%2C2729%2C1275%2C0_0&invitationId=inv_9c2bfa31-0844-4ced-9d3c-f5d9ed3e849f
 
@@ -64,10 +64,11 @@ Este proceso asegura que cada cambio en el código sea validado, empaquetado y d
 Durante el desarrollo de este trabajo práctico decidimos enfocarnos en aplicar correctamente los conceptos y herramientas de DevOps, más que en la complejidad funcional de la aplicación. Fue una decisión intencional, ya que para ambas integrantes del equipo estos eran conocimientos nuevos y ponerlos en práctica fue un trabajo complicado en varias ocasiones.
 
 A lo largo del proceso logramos:
-- Crear una pipeline funcional de CI/CD con GitHub Actions.
-- Automatizar el build, test y despliegue de la aplicación en Render.
+
 - Aprender a trabajar con contenedores usando Docker y docker-compose.
 - Documentar y preparar el proyecto para que pueda ser ejecutado localmente por otras personas con un solo comando.
+- Crear una pipeline funcional de CI/CD con GitHub Actions.
+- Automatizar el build, test y despliegue de la aplicación en Render.
 
 Este trabajo nos permitió comprender en profundidad cómo se integran las distintas herramientas de un entorno DevOps y como sirven para optimizar el flujo de desarrollo.
 

@@ -7,4 +7,4 @@ COPY . /usr/share/nginx/html
 # Exponer el puerto 80 para el servidor web
 EXPOSE 80
 
-# No es necesario definir CMD porque nginx ya tiene uno por defecto
+

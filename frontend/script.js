@@ -2,7 +2,7 @@ const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
 
-const API_URL = 'http://localhost:3000/tasks'; // Cambia el puerto o URL si usas otro
+const API_URL = 'http://localhost:3000/tasks'; 
 
 // Crear elemento li con una tarea recibida del backend
 function createTaskElement(task) {
@@ -21,7 +21,7 @@ function createTaskElement(task) {
   const editBtn = document.createElement('button');
   editBtn.textContent = 'Editar';
   editBtn.style.marginLeft = '10px';
-  editBtn.style.background = '#4CAF50'; // verde
+  editBtn.style.background = '#4CAF50'; 
   editBtn.style.boxShadow = '0 6px 12px rgba(76, 175, 80, 0.4)';
 
   // Evento para editar tarea
@@ -36,7 +36,7 @@ function createTaskElement(task) {
       .then(res => {
         if (!res.ok) throw new Error();
         span.textContent = newTitle.trim();
-        task.title = newTitle.trim(); // actualizar título local para evitar discrepancias
+        task.title = newTitle.trim(); 
       })
       .catch(() => alert('Error al editar la tarea'));
     }
@@ -50,7 +50,7 @@ function createTaskElement(task) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: span.textContent, completed: checkbox.checked }),
       });
-      task.completed = checkbox.checked; // actualizar estado local
+      task.completed = checkbox.checked; 
     } catch (error) {
       alert('Error actualizando la tarea');
       checkbox.checked = !checkbox.checked;
