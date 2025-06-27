@@ -4,9 +4,9 @@
 Para este trabajo decidimos hacer una aplicación muy simple, ya que el foco principal estuvo en realizar las buenas prácticas de DevOps más que en la complejidad de la aplicación en sí.
 
 La aplicación se llama TodoList y es una lista de tareas. Está desarrollada con Node.js y Express en el backend, mientras que el frontend utiliza HTML, CSS y JavaScript. La base de datos es una instancia de MongoDB Atlas.
+Se implementaron prácticas de DevOps como control de versiones, dockerización, automatización de tests, integración continua y monitoreo con métricas personalizadas.
 
-![Vista de la app de lista de tareas](https://i.ibb.co/gbrR7RfH/Captura-de-pantalla-2025-06-14-042443.png)
-
+[Vista de la app de lista de tareas](https://i.ibb.co/gbrR7RfH/Captura-de-pantalla-2025-06-14-042443.png)
 
 Al abrir la aplicación, se puede visualizar la lista de tareas previamente cargadas. Se pueden realizar las siguientes acciones:
 - Agregar una tarea nueva.
@@ -17,7 +17,7 @@ Al abrir la aplicación, se puede visualizar la lista de tareas previamente carg
 Todas estas modificaciones quedan almacenadas en la base de datos para que, al volver a abrir la aplicación, la lista se mantenga actualizada.
 
 ## 2. Instrucciones para correr el proyecto localmente con Docker
-Requisitos previos: tener instalado Docker y Docker Compose en la máquina.
+Requisitos previos: tener instalado Docker y Docker Compose en la máquina. Tener Git instalado
 
 Pasos para ejecutar la aplicación
 a- Clonar el repositorio: utilizar los siguiente comandos en la terminal
@@ -31,6 +31,12 @@ b- Construir y levantar los contenedores usando Docker Compose:
 
 usar este comando: docker-compose up --build
 
+Esto levantará los siguientes servicios:
+- Backend (API REST)	http://localhost:3000	(API Express + ruta /metrics de Prometheus)
+- Frontend	http://localhost:8080	(interfaz de la app)
+- Prometheus	http://localhost:9090	(visualización de métricas)
+- Grafana	http://localhost:3001	(dashboard de métricas)
+
 
 c- Abrir el navegador y acceder a la interfaz de la aplicación en: 
 http://localhost:8080
@@ -38,14 +44,16 @@ http://localhost:8080
 d- Para detener los contenedores y limpiar el entorno, usar este comando:
 docker-compose down
 
-Detalles técnicos:
-- El backend corre en Node.js y Express, expuesto en el puerto 3000 dentro del contenedor.
-
-- El frontend es servido con Nginx, expuesto en el puerto 8080 de la máquina local.
-
-- La conexión a la base de datos MongoDB Atlas está configurada en las variables de entorno del archivo .env.
+e- Ejecutar tests
+Para ejecutar los test en local hay que utilizar estos comandos:
+cd backend
+npm install
+npm test
+Esto ejecutará los tests definidos con Jest, utilizando una base de datos de pruebas independiente (.env.test) para no afectar los datos reales.
 
 ## 3. Diagrama del Pipeline DevOps
+
+El proyecto cuenta con integración continua usando GitHub Actions
 
 Cada vez que se realiza un push a la rama main, el pipeline se activa y ejecuta los siguientes pasos secuenciales:
 - Clonar repositorio: Se descarga el código fuente del repositorio para trabajar con la versión más reciente.
@@ -61,7 +69,19 @@ Este proceso asegura que cada cambio en el código sea validado, empaquetado y d
 
 #### Enlace del diagrama: https://lucid.app/lucidchart/358b8a76-b3d0-470f-9bbe-c09cc3dfbd51/edit?viewport_loc=105%2C-10%2C2729%2C1275%2C0_0&invitationId=inv_9c2bfa31-0844-4ced-9d3c-f5d9ed3e849f
 
-## 4. Conclusiones y roles del equipo
+# Monitoreo
+Se implementó monitoreo con Prometheus y Grafana. Las métricas son personalizadas y persistentes (guardadas en MongoDB Atlas)
+El dashboard se accede en http://localhost:3001
+
+## 4. Dificultades encontradas y cómo se resolvieron
+
+Durante el desarrollo de este proyecto enfrentamos varios desafíos. Uno de los principales fue lograr que todas las funcionalidades trabajaran correctamente de forma integrada: backend, frontend, base de datos en la nube y monitoreo.
+Cuando implementamos el monitoreo con Prometheus y Grafana, surgieron varios problemas relacionados con los puertos. En particular, el backend no mostraba la ruta /metrics porque el puerto 3000 ya estaba ocupado por otro proceso, incluso después de cerrar la aplicación. La solución fue identificar y detener manualmente el proceso activo para liberar el puerto antes de reiniciar la aplicación.
+Otra dificultad importante fue hacer que los tests funcionaran correctamente. Al agregar el monitoreo, los tests comenzaron a fallar porque intentaban acceder a funcionalidades que no eran necesarias durante las pruebas. Para resolverlo, ajustamos el código para que solo se conectara a la base de datos de métricas y cargara los contadores si no estábamos en modo test.
+Por último, cuando subimos los cambios a GitHub, el pipeline falló debido a que faltaba declarar la dependencia prom-client. Lo solucionamos instalando el paquete correctamente y actualizando los archivos package.json, lo que permitió que el pipeline se ejecutara con éxito.
+A pesar de estos obstáculos, logramos que la aplicación funcione completamente, con métricas persistentes, tests automatizados, dockerización y CI/CD activo.
+
+## 5. Conclusiones y roles del equipo
 Durante el desarrollo de este trabajo práctico decidimos enfocarnos en aplicar correctamente los conceptos y herramientas de DevOps, más que en la complejidad funcional de la aplicación. Fue una decisión intencional, ya que para ambas integrantes del equipo estos eran conocimientos nuevos y ponerlos en práctica fue un trabajo complicado en varias ocasiones.
 
 A lo largo del proceso logramos:
@@ -73,8 +93,8 @@ A lo largo del proceso logramos:
 
 Este trabajo nos permitió comprender en profundidad cómo se integran las distintas herramientas de un entorno DevOps y como sirven para optimizar el flujo de desarrollo.
 
-En cuanto al trabajo en equipo, este trabajo fue realizado en conjunto por Jesica Toloza y Carla Garicoch. Desde el comienzo nos organizamos de forma colaborativa, dividiendo tareas:
-- Jesica desarrolló el backend y configuró Docker, CI/CD y el despliegue.
+En cuanto al trabajo en equipo, este trabajo fue realizado en conjunto por Jesica Toloza y Karla Garicoch. Desde el comienzo nos organizamos de forma colaborativa, dividiendo tareas:
+- Jesica desarrolló el backend y configuró Docker, CI/CD, el monitoreo y el despliegue.
 - Karla se encargó del frontend, la integración y el testing.
 
 Cada una trabajó inicialmente en su rama (backend y frontend), y luego unificamos en una rama intermedia (develop) antes de hacer el merge final a main.
