@@ -31,6 +31,7 @@ b- Construir y levantar los contenedores usando Docker Compose:
 
 usar este comando: docker-compose up --build
 
+
 c- Abrir el navegador y acceder a la interfaz de la aplicación en: 
 http://localhost:8080
 
